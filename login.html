@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নামাজ ট্র্যাকার - লগইন</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="আপনার দৈনিক নামাজের রেকর্ড রাখুন এবং ট্র্যাক করুন">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="নামাজ ট্র্যাকার">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#667eea">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192x192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-72x72.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="enhanced-style.css">
+</head>
+<body>
+    <!-- Login Panel -->
+    <div id="loginPanel" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🕌 নামাজ ট্র্যাকার</h1>
+                <p>আপনার নামাজের রেকর্ড রাখুন</p>
+            </div>
+            
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="showLoginForm()">লগইন</button>
+                <button class="tab-btn" onclick="showSignupForm()">সাইন আপ</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">ইমেইল</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">পাসওয়ার্ড</label>
+                    <input type="password" id="loginPassword" required minlength="6">
+                </div>
+                <button type="submit" class="auth-btn">লগইন করুন</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signupEmail">ইমেইল</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">পাসওয়ার্ড</label>
+                    <input type="password" id="signupPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <button type="submit" class="auth-btn">সাইন আপ করুন</button>
+            </form>
+
+            <div id="authError" class="error-message"></div>
+            <div id="authLoading" class="loading-message" style="display: none;">
+                <div class="loading"></div>
+                <span>অপেক্ষা করুন...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Firebase first -->
+    <script type="module" src="firebase-config.js"></script>
+    <!-- Then load other scripts -->
+    <script src="login-handler.js"></script>
+    <script src="pwa-handler.js"></script>
+</body>
+</html>
+
