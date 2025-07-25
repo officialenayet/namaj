@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নামাজ ট্র্যাকার</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="আপনার দৈনিক নামাজের রেকর্ড রাখুন এবং ট্র্যাক করুন">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="নামাজ ট্র্যাকার">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#667eea">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192x192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-72x72.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="enhanced-style.css">
+</head>
+<body>
+    <!-- Main App -->
+    <div id="mainApp" class="container">
+        <header>
+            <div class="header-content">
+                <a href="https://officialenayet.github.io/namaj" class="header-title-link">
+                    <h1>নামাজ ট্র্যাকার</h1>
+                </a>
+                <div class="user-info">
+                    <span id="userEmail"></span>
+                    <button id="logoutBtn" class="logout-btn">লগআউট</button>
+                </div>
+            </div>
+            <div class="date-display">
+                <span id="currentDate"></span>
+            </div>
+        </header>
+
+        <main>
+            <div class="prayer-tracker">
+                <div class="tracker-header">
+                    <div class="col">ওয়াক্ত</div>
+                    <div class="col">পড়া হয়েছে</div>
+                    <div class="col">জামাতে</div>
+                </div>
+
+                <div class="prayer-row" data-prayer="fajr">
+                    <div class="prayer-name">ফজর</div>
+                    <div class="prayer-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="fajr-prayed">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="jamaat-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="fajr-jamaat">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prayer-row" data-prayer="dhuhr">
+                    <div class="prayer-name" id="dhuhr-name">জোহর</div>
+                    <div class="prayer-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="dhuhr-prayed">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="jamaat-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="dhuhr-jamaat">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prayer-row" data-prayer="asr">
+                    <div class="prayer-name">আসর</div>
+                    <div class="prayer-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="asr-prayed">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="jamaat-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="asr-jamaat">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prayer-row" data-prayer="maghrib">
+                    <div class="prayer-name">মাগরিব</div>
+                    <div class="prayer-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="maghrib-prayed">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="jamaat-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="maghrib-jamaat">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prayer-row" data-prayer="isha">
+                    <div class="prayer-name">এশা</div>
+                    <div class="prayer-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="isha-prayed">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="jamaat-status">
+                        <label class="toggle">
+                            <input type="checkbox" id="isha-jamaat">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="saveData" class="btn btn-primary">আজকের ডেটা সেভ করুন</button>
+                <button id="calendarView" class="btn btn-secondary" onclick="calendarHandler.showCalendarView()">ক্যালেন্ডার ভিউ</button>
+                <button id="editHistory" class="btn btn-info" onclick="showEditHistory()">এডিট হিস্ট্রি</button>
+            </div>
+
+            <!-- Calendar View Section -->
+            <div id="calendarSection" class="calendar-section" style="display: none;">
+                <div class="section-header">
+                    <h2>নামাজের ইতিহাস</h2>
+                    <button id="backToMainFromCalendar" class="btn btn-secondary" onclick="calendarHandler.showMainView()">হোমে ফিরে যান</button>
+                    <div class="calendar-controls">
+                        <button id="viewWeekly" class="view-btn active">সাপ্তাহিক</button>
+                        <button id="viewMonthly" class="view-btn">মাসিক</button>
+                    </div>
+                </div>
+                
+                <!-- Weekly View -->
+                <div id="weeklyView" class="calendar-view">
+                    <div class="week-navigation">
+                        <button id="prevWeek" class="nav-btn">‹</button>
+                        <span id="currentWeek">এই সপ্তাহ</span>
+                        <button id="nextWeek" class="nav-btn">›</button>
+                    </div>
+                    <div id="weeklyCalendar" class="weekly-calendar"></div>
+                </div>
+                
+                <!-- Monthly View -->
+                <div id="monthlyView" class="calendar-view" style="display: none;">
+                    <div class="month-navigation">
+                        <button id="prevMonth" class="nav-btn">‹</button>
+                        <span id="currentMonth">এই মাস</span>
+                        <button id="nextMonth" class="nav-btn">›</button>
+                    </div>
+                    <div id="monthlyCalendar" class="monthly-calendar"></div>
+                </div>
+                
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <div class="legend-color complete"></div>
+                        <span>সব নামাজ পড়া হয়েছে</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color partial"></div>
+                        <span>কিছু নামাজ পড়া হয়েছে</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color jamaat"></div>
+                        <span>জামাতে পড়া হয়েছে</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color none"></div>
+                        <span>কোন নামাজ পড়া হয়নি</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Charts Section -->
+            <div id="chartsSection" class="charts-section" style="display: none;">
+                <div class="section-header">
+                    <h2>মাসিক পরিসংখ্যান চার্ট</h2>
+                    <div class="month-controls">
+                        <button id="prevChartMonth" class="nav-btn">‹</button>
+                        <span id="currentChartMonth">জুলাই ২০২৫</span>
+                        <button id="nextChartMonth" class="nav-btn">›</button>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>নামাজ সম্পন্নতার হার</h3>
+                        <canvas id="completionChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>জামাতে নামাজের হার</h3>
+                        <canvas id="jamaatChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>দৈনিক ট্রেন্ড</h3>
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>সাপ্তাহিক তুলনা</h3>
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h2>এই মাসের পরিসংখ্যান</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>ফজর</h3>
+                        <div class="stat-numbers">
+                            <span id="fajr-total">0</span>/<span id="fajr-jamaat-count">0</span>
+                        </div>
+                        <small>মোট/জামাত</small>
+                    </div>
+                    <div class="stat-card">
+                        <h3>জোহর</h3>
+                        <div class="stat-numbers">
+                            <span id="dhuhr-total">0</span>/<span id="dhuhr-jamaat-count">0</span>
+                        </div>
+                        <small>মোট/জামাত</small>
+                    </div>
+                    <div class="stat-card">
+                        <h3>আসর</h3>
+                        <div class="stat-numbers">
+                            <span id="asr-total">0</span>/<span id="asr-jamaat-count">0</span>
+                        </div>
+                        <small>মোট/জামাত</small>
+                    </div>
+                    <div class="stat-card">
+                        <h3>মাগরিব</h3>
+                        <div class="stat-numbers">
+                            <span id="maghrib-total">0</span>/<span id="maghrib-jamaat-count">0</span>
+                        </div>
+                        <small>মোট/জামাত</small>
+                    </div>
+                    <div class="stat-card">
+                        <h3>এশা</h3>
+                        <div class="stat-numbers">
+                            <span id="isha-total">0</span>/<span id="isha-jamaat-count">0</span>
+                        </div>
+                        <small>মোট/জামাত</small>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; ২০২৫ নামাজ ট্র্যাকার। সকল অধিকার সংরক্ষিত।</p>
+                <button id="contactBtn" class="contact-btn">যোগাযোগ করুন</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Load Firebase first -->
+    <script type="module" src="firebase-config.js"></script>
+    <!-- Then load other scripts -->
+    <script src="auth-handler.js"></script>
+    <script src="pwa-handler.js"></script>
+    <script src="calendar-handler.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
